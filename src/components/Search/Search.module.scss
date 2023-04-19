@@ -1,0 +1,38 @@
+
+.root {
+
+    position: relative;
+
+    .input {
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        padding: 12px 20px;
+        border-radius: 10px;
+        width: 300px;
+        font-size: 16px;
+        padding-left: 40px;
+        padding-right: 40px;
+
+        &:focus {
+            border: 1px solid rgba(0, 0, 0, 0.3);
+        }
+    }
+    .searchImg{
+        max-width: 20px;
+        position: absolute;
+        opacity: 0.3;
+        top: 15px;
+        left: 15px;
+    }
+    .clearImg{
+        max-width: 20px;
+        position: absolute;
+        opacity: 0.3;
+        top: 0px;
+        right: 15px;
+        cursor: pointer;
+
+        &:hover{
+            opacity: 0.8;
+        }
+    }
+}
