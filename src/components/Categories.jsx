@@ -5,7 +5,7 @@ function Categories({
     value,
     onClickCategory
 }) {
-
+    
     const categories =[
         'Все',
         'Мясные',

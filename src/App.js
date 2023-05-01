@@ -8,7 +8,7 @@ import Home from "./pages/Home";
 import Cart from "./pages/Cart";
 import NotFound from "./pages/NotFound";
 
-
+export const AppContext = React.createContext();
 
 function App() {
 
@@ -17,27 +17,29 @@ function App() {
 
   return (
     <div className="App">
-      <div className="wrapper">
-        <Header searchValue={searchValue} setSearchValue={setSearchValue} />
-        <div className="content">
-          <div className="container">
-            <Routes>
-              <Route
-                path="/"
-                element={<Home searchValue={searchValue}/>}
-              />
-              <Route
-                path="*"
-                element={<NotFound />}
-              />
-              <Route
-                path="/cart"
-                element={<Cart />}
-              />
-            </Routes>
+      <AppContext.Provider value={{searchValue, setSearchValue}}>
+        <div className="wrapper">
+          <Header/>
+          <div className="content">
+            <div className="container">
+              <Routes>
+                <Route
+                  path="/"
+                  element={<Home/>}
+                />
+                <Route
+                  path="*"
+                  element={<NotFound />}
+                />
+                <Route
+                  path="/cart"
+                  element={<Cart />}
+                />
+              </Routes>
+            </div>
           </div>
         </div>
-      </div>
+      </AppContext.Provider>
     </div>
   );
 }
