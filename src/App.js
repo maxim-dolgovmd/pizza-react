@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import './scss/app.scss';
+// import { useSelector, useDispatch } from 'react-redux'
+// import { decrement, increment } from './redux/slices/filterSlices'
 import { Routes, Route } from 'react-router-dom';
 
 import Header from "./components/Header";
@@ -13,7 +15,6 @@ export const AppContext = React.createContext();
 function App() {
 
   const [searchValue, setSearchValue] = useState('')
-  console.log(searchValue)
 
   return (
     <div className="App">
