@@ -1,17 +1,21 @@
 import React from "react";
+import qs from 'qs'
 
 import Categories from "../components/Categories";
-import Sort from "../components/Sort";
+import Sort, { list } from "../components/Sort";
 import PizzaBlock from "../components/PizzaBlock";
 import Skeleton from "../components/PizzaBlock/skeleton";
 import Pagination from "../components/Pagination";
+import { initialState } from "../redux/slices/filterSlice";
 
 import { useState } from "react";
 import { AppContext } from "../App";
 
 import { useSelector, useDispatch } from "react-redux";
-import {setCategoryId, setCurrentPage} from '../redux/slices/filterSlice'
+import {setCategoryId, setCurrentPage, setFilters} from '../redux/slices/filterSlice'
+import {useNavigate} from 'react-router-dom'
 import axios from "axios";
+// import { list } from "../components/Sort";
 
 
 function Home() {
@@ -24,6 +28,8 @@ function Home() {
 
     const sortType = useSelector((state) => state.filterReducer.sortType)
     const currentPage = useSelector((state) => state.filterReducer.currentPage)
+    const isSearch = React.useRef(false);
+    const isMounted = React.useRef(false);
 
     const onClickCategory = (id) => {
         dispatch(setCategoryId(id))
@@ -33,23 +39,21 @@ function Home() {
         dispatch(setCurrentPage(number))
     }
 
+    // const filtersParse = (obj) => {
+    //     dispatch(setFilters(obj))
+    // }
+
 
     const [items, setItems] = useState([])
     const [isLoading, setIsLoading] = React.useState(true)
 
-    // const [categoryId, setCategoryId] = React.useState(0);
-    // const [currentPage, setCurrentPage] = React.useState(1);
-    // const [sortType, setSortType] = React.useState({
-    //     name: 'популярности',
-    //     sortProperty: 'rating',
-    // });
-
+    const navigate = useNavigate()
 
     React.useEffect(() => {
         setIsLoading(true)
 
-        const order = sortType.sortProperty.includes('-') ? 'asc' : 'desc';
         const sortBy = sortType.sortProperty.replace('-', '');
+        const order = sortType.sortProperty.includes('-') ? 'asc' : 'desc';
         const category = categoryId > 0 ? `category=${categoryId}` : '';
         const search = searchValue ? `&search=${searchValue}` : '';
 
@@ -61,7 +65,35 @@ function Home() {
                 setIsLoading(false)
         })
         window.scrollTo(0, 0)
-    }, [categoryId, sortType, searchValue, currentPage])
+    }, [categoryId, sortType.sortProperty, searchValue, currentPage])
+
+
+    React.useEffect(() => {
+        if (isMounted.current) {
+            const queryString = qs.stringify({
+                sortProperty: sortType.sortProperty,
+                categoryId,
+                currentPage,
+            });
+            navigate(`?${queryString}`)
+        }
+        isMounted.current = true
+    }, [categoryId, sortType.sortProperty, currentPage]);
+
+
+    React.useEffect(() => {
+        if (window.location.search) {
+            const params = qs.parse(window.location.search.substring(1))
+            // console.log(params)
+            const sort = list.find((obj) => obj.sortProperty === params.sortProperty)
+            dispatch(
+                setFilters({
+                    ...params, sort,
+                })
+            )
+            isSearch.current = true
+        }
+    }, [])
     
 
     return (
