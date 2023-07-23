@@ -1,8 +1,13 @@
-import React, {useEffect, useState} from "react"
+import React, {MouseEventHandler, useEffect, useState} from "react"
 import {useSelector, useDispatch} from 'react-redux'
-import {setSortType} from '../redux/slices/filterSlice'
+import {setSortType, selectSortType, Sort} from '../redux/slices/filterSlice'
 
-export const list = [
+type SortItem = {
+    name: string,
+    sortProperty: 'rating' | '-rating' | 'price' | '-price' | 'title' | '-title'
+}
+
+export const list: SortItem[] = [
     {name: 'популярности (DESC)', sortProperty: 'rating'},
     {name: 'популярности (ASC)', sortProperty: '-rating'},
     {name: 'цене (DESC)', sortProperty: 'price'},
@@ -11,26 +16,37 @@ export const list = [
     {name: 'алфавиту (ASC)', sortProperty: '-title'},
 ]
 
-function Sort() {
+
+// type popupClick = React.MouseEvent<HTMLBodyElement> & {
+//     composedPath: Node[];
+// }
+
+type ValueType = {
+    value: SortItem
+}
+
+const SortPopur: React.FC<ValueType> = React.memo(({value}) => {
 
     const dispatch = useDispatch()
-    const sortType = useSelector((state) => state.filterReducer.sortType)
-    const sortRef = React.useRef()
-    // console.log(sortRef)
+    // const sortType = useSelector(selectSortType)
+    const sortRef = React.useRef<HTMLDivElement>(null)
+    console.log(sortRef)
 
     const [open, setOpen] = useState(false);
     // const [sortActive, setSortActive] = useState(0);
 
-    const onClickListItem = (index) => {
+    const onClickListItem = (index: SortItem) => {
         dispatch(setSortType(index))
         setOpen(!open)
     }
 
     React.useEffect(() => {
-        const handleSubmitOutside = (event) => {
-            if (!event.composedPath().includes(sortRef.current)) {
+        const handleSubmitOutside = (event: MouseEvent) => {
+
+            if (sortRef.current && !event.composedPath().includes(sortRef.current)) {
                 setOpen(false)
-                console.log('click event')
+                // console.log('click event')
+                // console.log(event.composedPath, 'event')
             }
         }
         document.body.addEventListener('click', handleSubmitOutside);
@@ -58,7 +74,7 @@ function Sort() {
                 <b>Сортировка по:</b>
                 <span onClick={() => setOpen(!open)}>
                     {/* {list[type].name} */}
-                    {sortType.name}
+                    {value.name}
                 </span>
             </div>
             {open && <div className="sort__popup">
@@ -67,7 +83,7 @@ function Sort() {
                         <li
                             key={index} 
                             onClick={() => onClickListItem(obj)} 
-                            className={sortType.sortProperty === obj.sortProperty ? 'active' : ''}>
+                            className={value.sortProperty === obj.sortProperty ? 'active' : ''}>
                             {obj.name}
                         </li>
                     ))}
@@ -75,6 +91,6 @@ function Sort() {
             </div>}
         </div>
     )
-}
+})
 
-export default Sort
+export default SortPopur

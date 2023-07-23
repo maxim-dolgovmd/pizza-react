@@ -1,23 +1,31 @@
 import React from "react"
 import { useState } from "react"
 
-import {setItem} from '../../redux/slices/cartSlice'
+import {CartItem, selectCart, selectCartItemById, setItem} from '../../redux/slices/cartSlice'
 import { useSelector,  useDispatch} from "react-redux"
+import { Link } from "react-router-dom"
 
-
-function PizzaBlock({
+type PizzaProps = {
+   id: string,
+   title: string,
+   price: number,
+   imageUrl: string,
+   types: number[],
+   sizes: number[],
+}
+const PizzaBlock: React.FC<PizzaProps> = ({
     id,
     title,
     price,
     imageUrl,
     types,
     sizes,
-}) {
+}) => {
     const [activeSizes, setActiveSizes] = React.useState(0)
     const [activeTypes, setActiveTypes] = React.useState(0)
     const dispatch = useDispatch()
-    const cartItem = useSelector((state) => state.cartReducer.items.find((obj) => obj.id === id))
-    // console.log(cartItem)
+    const cartItem = useSelector(selectCartItemById(id))
+    console.log(cartItem)
 
     const addedCount = cartItem && cartItem.count 
 
@@ -28,13 +36,14 @@ function PizzaBlock({
     ]
 
     const onClickAdd = () => {
-        const item = {
+        const item: CartItem = {
             id,
             title,
             price,
             imageUrl,
             type: typeNames[activeTypes],
             sizes: sizes[activeSizes],
+            count: 0,
         }
         dispatch(setItem(item))
     }
@@ -44,11 +53,13 @@ function PizzaBlock({
 
         <div className="pizza-block-wrapper">
             <div className="pizza-block" >
-                <img
-                    className="pizza-block__image"
-                    src={imageUrl}
-                    alt="Pizza"
-                />
+                <Link to={`/pizza/${id}`}>
+                    <img
+                        className="pizza-block__image"
+                        src={imageUrl}
+                        alt="Pizza"
+                    />
+                </Link>
                 <h4 className="pizza-block__title">{title}</h4>
                 <div className="pizza-block__selector">
                     <ul>
