@@ -1,11 +1,7 @@
 import React from "react";
 import qs from 'qs'
 
-import Categories from "../components/Categories";
-import Sort, { list } from "../components/Sort";
-import PizzaBlock from "../components/PizzaBlock";
-import Skeleton from "../components/PizzaBlock/skeleton";
-import Pagination from "../components/Pagination";
+import {Categories, PizzaBlock, Skeleton, Pagination, SortPopur} from '../components'
 
 import { useState } from "react";
 
@@ -15,7 +11,6 @@ import {setItems, fetchPizzaz, selectPizza, FetchPizzazArgs} from '../redux/slic
 import {Link, useNavigate, useParams} from 'react-router-dom'
 import axios from "axios";
 import { useAppDispatch } from "../redux/store";
-import SortPopur from "../components/Sort";
 // import { list } from "../components/Sort";
 
 

@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useEffect } from "react";
-import {useParams, useNavigate} from 'react-router-dom'
+import { useParams, useNavigate, Link } from 'react-router-dom'
 
 const FullPizza: React.FC = () => {
     const [pizza, setPizza] = React.useState<{
@@ -11,13 +11,14 @@ const FullPizza: React.FC = () => {
 
     const params = useParams()
     const id = params?.id
+    console.log(params)
 
     const navigate = useNavigate()
 
     useEffect(() => {
         async function fetchPizza() {
             try {
-                const {data} = await axios(`https://6435d8c48205915d34e74909.mockapi.io/items/${id}`)
+                const { data } = await axios(`https://6435d8c48205915d34e74909.mockapi.io/items/${id}`)
                 // const data = await responce.json()
                 setPizza(data)
             } catch (error) {
@@ -30,14 +31,19 @@ const FullPizza: React.FC = () => {
 
     console.log(pizza)
 
-    
+
 
     return (
-       <div className="container">
+        <div className="container">
             <img src={pizza?.imageUrl} />
             <h1>{pizza?.title}</h1>
             <div>{pizza?.price}</div>
-       </div>
+            <button className="button button--outline button--add">
+                <Link to={'/kkk'}>
+                    <span>Назад</span>
+                </Link>
+            </button>
+        </div>
     )
 }
 
