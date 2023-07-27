@@ -34,12 +34,15 @@ const cartSlice = createSlice({
     reducers: {
         setItem(state, action: PayloadAction<CartItem>) {
             // state.items.push(action.payload)
-            // state.sumCart = state.items.reduce((acum, item) => acum + item.price, 0)
+            const countCart = state.items.reduce((acum, item) => acum + item.count, 1)
+            console.log(countCart)
             const findItem = state.items.find((obj) => obj.id === action.payload.id && obj.type === action.payload.type && obj.sizes === action.payload.sizes)
-            // const findItemCount = state.items.find((obj) => obj.id === action.payload.id)
+            
             if (findItem ) {
                 findItem.count++
-            } else {
+            }
+            
+            if (!findItem ) {
                 state.items.push({
                     ...action.payload,
                     type: action.payload.type,
@@ -51,7 +54,7 @@ const cartSlice = createSlice({
         },
 
         setMinusItem(state, action: PayloadAction<CartItem>) {
-            const findItem = state.items.find((obj) => obj.id === action.payload.id)
+            const findItem = state.items.find((obj) => obj.id === action.payload.id && obj.type === action.payload.type && obj.sizes === action.payload.sizes)
 
             if (findItem) {
                 findItem.count--
@@ -60,8 +63,11 @@ const cartSlice = createSlice({
             state.sumCount = countCartFromLS(state.items)
         },
 
-        setRemoveItem(state, action: PayloadAction<CartItem>) {
-            state.items = state.items.filter((obj) => obj.id !== action.payload.id ) 
+        setRemoveItem(state, action: PayloadAction<number>) {
+
+            state.items = state.items.filter((obj, index) => {
+                    return index !== action.payload
+                }) 
 
             state.sumCart = sumCartFromLS(state.items)
             state.sumCount = countCartFromLS(state.items)
@@ -78,7 +84,9 @@ const cartSlice = createSlice({
 
 export const selectCart = (state: RootState) => state.cartReducer
 
-export const selectCartItemById = (id: string) => (state: RootState) => state.cartReducer.items.find((obj) => obj.id === id)
+export const selectCartItemById = (item: any) => (state: RootState) => state.cartReducer.items.find((obj) => 
+    obj.id === item.id && obj.sizes === item.sizes && obj.type === item.type
+)
 
 export const {setItem, setRemoveItem, setClear, setMinusItem} = cartSlice.actions
 

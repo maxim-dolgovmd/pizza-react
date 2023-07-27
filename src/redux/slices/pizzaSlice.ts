@@ -32,7 +32,7 @@ export enum Status {
 
 interface PizzaSliceState {
     status: Status
-    items: Pizza[],
+    item: Pizza[],
 }
 
 export const fetchPizzaz = createAsyncThunk<Pizza[], FetchPizzazArgs>(
@@ -48,7 +48,7 @@ export const fetchPizzaz = createAsyncThunk<Pizza[], FetchPizzazArgs>(
 
 const initialState: PizzaSliceState = {
     status: Status.LOADING,
-    items: [],
+    item: [],
 }
 
 const pizzaSlice = createSlice({
@@ -57,24 +57,24 @@ const pizzaSlice = createSlice({
     reducers: {
         setItems(state, action) {
             // state.items = action.payload
-            console.log(state.items)
+            console.log(state.item)
         },
     },
     extraReducers: (builder) => {
 
         builder.addCase(fetchPizzaz.pending, (state) => {
             state.status = Status.LOADING
-            state.items = []
+            state.item = []
         });
 
         builder.addCase(fetchPizzaz.fulfilled, (state, action) => {
-            state.items = action.payload
+            state.item = action.payload
             state.status = Status.SUCCES
         });
 
         builder.addCase(fetchPizzaz.rejected, (state) => {
             state.status = Status.ERROR
-            state.items = []
+            state.item = []
         });
     }
 })

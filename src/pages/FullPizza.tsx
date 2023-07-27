@@ -39,7 +39,7 @@ const FullPizza: React.FC = () => {
             <h1>{pizza?.title}</h1>
             <div>{pizza?.price}</div>
             <button className="button button--outline button--add">
-                <Link to={'/kkk'}>
+                <Link to={'/'}>
                     <span>Назад</span>
                 </Link>
             </button>

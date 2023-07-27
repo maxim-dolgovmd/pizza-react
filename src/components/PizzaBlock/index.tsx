@@ -4,6 +4,9 @@ import { useState } from "react"
 import {CartItem, selectCart, selectCartItemById, setItem} from '../../redux/slices/cartSlice'
 import { useSelector,  useDispatch} from "react-redux"
 import { Link } from "react-router-dom"
+import { addCountCard } from "../../utils/addCountCard"
+import { selectPizza } from "../../redux/slices/pizzaSlice"
+import { getCartFromLockalStorage } from "../../utils/getCartFromLockalStorage"
 
 type PizzaProps = {
    id: string,
@@ -24,10 +27,8 @@ const PizzaBlock: React.FC<PizzaProps> = ({
     const [activeSizes, setActiveSizes] = React.useState(0)
     const [activeTypes, setActiveTypes] = React.useState(0)
     const dispatch = useDispatch()
-    const cartItem = useSelector(selectCartItemById(id))
-    console.log(cartItem)
-
-    const addedCount = cartItem && cartItem.count 
+    
+    const {items} = useSelector(selectCart)
 
 
     const typeNames = [
@@ -47,6 +48,18 @@ const PizzaBlock: React.FC<PizzaProps> = ({
         }
         dispatch(setItem(item))
     }
+
+    const itemCount = {
+        id,
+        type: typeNames[activeTypes],
+        sizes: sizes[activeSizes],
+    }
+
+    const cartItem = useSelector(selectCartItemById(itemCount))
+
+    const addedCount = cartItem && cartItem.count
+
+    console.log(cartItem)
 
 
     return (
@@ -103,6 +116,9 @@ const PizzaBlock: React.FC<PizzaProps> = ({
                             addedCount  &&
                                 <i>{addedCount}</i>
                         }
+                        {/* {
+                            count
+                        } */}
                     </button>
                 </div>
             </div >
